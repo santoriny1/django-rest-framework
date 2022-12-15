@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ('phone', models.PositiveBigIntegerField()),
                 ('email', models.EmailField(max_length=254)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('driver_license', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalSQL.driverslicense')),
+                ('driver_license', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalMongo.driverslicense')),
             ],
         ),
         migrations.CreateModel(
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
                 ('rental_expiry', models.DateField()),
                 ('total_cost', models.DecimalField(decimal_places=2, max_digits=6)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalSQL.member')),
+                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalMongo.member')),
             ],
         ),
         migrations.CreateModel(
@@ -66,8 +66,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalSQL.movie')),
-                ('rental', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalSQL.rental')),
+                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalMongo.movie')),
+                ('rental', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movieRentalMongo.rental')),
             ],
         ),
     ]

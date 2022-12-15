@@ -98,6 +98,7 @@ DATABASES = {
     }
 }
 
+DATABASE_ROUTERS = ['movieRentalSQL.dbRouter.movieRentalSQLDBRouter', 'movieRentalMongo.dbRouter.movieRentalMongoDBRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

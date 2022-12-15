@@ -3,10 +3,10 @@ from .api import DriversLicenseViewSet, MemberViewSet, MovieRentalViewSet, Movie
 
 router = routers.DefaultRouter()
 
-router.register('api/drivers-license', DriversLicenseViewSet, 'drivers-license')
-router.register('api/members', MemberViewSet, 'members')
-router.register('api/movie-rentals', MovieRentalViewSet, 'movie-rentals')
-router.register('api/movies', MovieViewSet, 'movies')
-router.register('api/rentals', RentalViewSet, 'rentals')
+router.register('api/sql/drivers-license', DriversLicenseViewSet, 'sql-drivers-license')
+router.register('api/sql/members', MemberViewSet, 'sql-members')
+router.register('api/sql/movie-rentals', MovieRentalViewSet, 'sql-movie-rentals')
+router.register('api/sql/movies', MovieViewSet, 'sql-movies')
+router.register('api/sql/rentals', RentalViewSet, 'sql-rentals')
 
 urlpatterns = router.urls
