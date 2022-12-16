@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import environ
+import os
+import dj_database_url
 env = environ.Env()
 environ.Env.read_env()
 
@@ -23,13 +25,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+# SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
-
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -53,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'drfsimplecrud.urls'
@@ -81,21 +88,25 @@ WSGI_APPLICATION = 'drfsimplecrud.wsgi.application'
 
 DATABASES = {
     # POSTGRESQL
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("DB_NAME_POSTGRESQL"),
-        'USER': env("DB_USER_POSTGRESQL"),
-        'PASSWORD': env("DB_PASSWORD_POSTGRESQL"),
-        'HOST': env("DB_HOST_POSTGRESQL"),
-        'PORT': env("DB_PORT_POSTGRESQL"),
-    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': env("DB_NAME_POSTGRESQL"),
+    #     'USER': env("DB_USER_POSTGRESQL"),
+    #     'PASSWORD': env("DB_PASSWORD_POSTGRESQL"),
+    #     'HOST': env("DB_HOST_POSTGRESQL"),
+    #     'PORT': env("DB_PORT_POSTGRESQL"),
+    # },
+    'default': dj_database_url.config(
+        default='postgresql://postgres:123456@localhost:5432/dbtest', 
+        conn_max_age=600
+    ),
     # MONGODB
-    'mongodb': {
-        'ENGINE': 'djongo',
-        'NAME': env("DB_NAME_MONGODB"),
-        'HOST': env("DB_HOST_MONGODB"),
-        'PORT': env("DB_PORT_MONGODB"),
-    }
+    # 'mongodb': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': env("DB_NAME_MONGODB"),
+    #     'HOST': env("DB_HOST_MONGODB"),
+    #     'PORT': env("DB_PORT_MONGODB"),
+    # }
 }
 
 DATABASE_ROUTERS = ['movieRentalSQL.dbRouter.movieRentalSQLDBRouter', 'movieRentalMongo.dbRouter.movieRentalMongoDBRouter']
@@ -135,6 +146,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
